@@ -16,7 +16,6 @@ class Contador{
         console.log(`${this.nombreResponsable}=>${this.contador}`)
      }
 
-
 }
 
 const responsable = new Contador('kevin');
