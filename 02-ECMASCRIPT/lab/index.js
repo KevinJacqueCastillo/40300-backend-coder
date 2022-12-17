@@ -4,9 +4,11 @@ class TicketManager {
     //se crea una variable 
     this.eventos = []
   }
-
   //variable privada 
   #precioBaseDeGanancia = 200;
+
+  
+
   //para crear parametros opcionales solo debemos asignarlos, si la funcion es llamada sin este parametro 
   //se utilizara el default, en caso de que viaje, este sera el nuevo parametro
   agregarEvento(nombre, lugar, precio, capacidad = 50, fecha = new Date()) {
@@ -27,6 +29,8 @@ class TicketManager {
   agregarUsuario(idUsuario, idEvento) {
     //con este map limpiamos el array y solo dejamos un array con los ids
     //en ves de tener un array con objetos, tenemos uno con ids de los eventos
+    //[{}..n]
+    //[id]
     const idsEventos = this.eventos.map(evento => evento.id)
     if (idsEventos.includes(idEvento)) {
       //como sabesmos que el id es la posicion del arreglo lo reutilizamos
