@@ -1,0 +1,12 @@
+<form id="formUser">
+    {{!-- <input placeholder="name" id="name" type="text" required>
+    <input placeholder="email" id="email" type="text" required>
+    <input placeholder="password" id="password" type="email" required> --}}
+
+    {{#each inputs}}
+        <input placeholder={{this.placeholder}} id="email" type="text" required>
+    {{/each}}
+    <button>Registrar</button>
+
+</form>
+<script src="/js/signup.js" ></script>

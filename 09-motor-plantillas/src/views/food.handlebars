@@ -1,0 +1,21 @@
+<div>
+    foods 
+    <table>
+            <tr>
+                <td>name</td>
+                <td>price</td>
+            </tr>
+    {{#if isAdmin}}
+        {{#each foods}}
+            
+                <tr>
+                    <td>{{this.name}}</td>
+                    <td>{{this.price}}</td>
+                </tr>
+        {{/each}}
+    {{else}}
+        <h1>user no permitido</h1>
+    {{/if}}
+        </table>
+
+</div>
