@@ -8,9 +8,18 @@ const httpServer = app.listen(8080, () => {
   console.log('server is running on port 8080');
 });
 const io = new Server(httpServer);
-
+const msgs = [];
 io.on('connection', (socket) => {
+  socket.on('new-user', (data) => {
+    socket.broadcast.emit('new-user', { user: data.user });
+  });
   console.log('nueva usuario conectado');
+  socket.emit('message-history', msgs);
+  socket.on('message', (data) => {
+    console.log(data);
+    msgs.push(data);
+    io.emit('message', data);
+  });
 });
 
 app.engine('handlebars', handlebars.engine());
