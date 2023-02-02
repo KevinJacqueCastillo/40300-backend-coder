@@ -1,8 +1,8 @@
 const express = require('express');
-const usersRouter = require('./routes/user.router');
 const viewRouter = require('./routes/views.router');
 const handlebars = require('express-handlebars');
 const mongoose = require('mongoose');
+const productsRouter = require('./routes/products.router');
 
 const app = express();
 const PORT = 8080;
@@ -15,8 +15,9 @@ app.set('view engine', 'handlebars');
 app.use(express.json());
 app.use(express.static(__dirname + '/public'));
 app.use(express.urlencoded({ extended: true }));
-app.use('/api/users', usersRouter);
+
 app.use('/', viewRouter);
+app.use('/api/products', productsRouter);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
