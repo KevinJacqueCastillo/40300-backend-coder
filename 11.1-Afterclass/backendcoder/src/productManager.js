@@ -1,31 +1,13 @@
-const fs = require('fs');
+const ProductsModel = require("../../../15-practica-integradora/src/models/products.model");
 
-const writeFile = (path, Products) =>
-  fs.promises.writeFile(path, JSON.stringify({ products: Products }));
 
-const readFile = async (path) => {
-  const GetProducts = await fs.promises.readFile(path, { encoding: 'utf-8' });
-  const Result = JSON.parse(GetProducts);
-  return Result;
-};
+
+
+
 
 class ProductManager {
-  constructor(path) {
-    this.Product = [];
-    this.path = path;
-  }
-  CreateFile = async () => {
-    const File = fs.existsSync(this.path);
-
-    if (File) {
-      console.log('Ya existe el archivo');
-      const { products } = await readFile(this.path);
-      this.Product = products;
-    } else {
-      await writeFile(this.path, this.Product);
-      console.log('Archivo creado con éxito!');
-    }
-  };
+  
+  
 
   addProduct = async ({
     title,
@@ -36,12 +18,13 @@ class ProductManager {
     stock,
   }) => {
     if (title && description && price && thumbnail && code && stock) {
-      const RepeatedCode = this.Product.map((code) => code.code).includes(code);
+      
+      //mongodb  => modelo => schema => collection => document findOne({code})
       if (RepeatedCode) {
-        console.log('Código repetido');
+        return false;
       } else {
-        this.Product.push({
-          id: this.Product.length,
+        //crear el nuevo p
+        const newProduct = await ProductsModel.create({
           title,
           description,
           price,
@@ -49,7 +32,6 @@ class ProductManager {
           code,
           stock,
         });
-        await writeFile(this.path, this.Product);
         console.log('Producto agregado con éxito');
       }
     } else {
@@ -98,15 +80,7 @@ class ProductManager {
   };
 
   deleteProduct = async (id) => {
-    const { products } = await readFile(this.path);
-    const FindIndex = products.findIndex((element) => element.id === id);
-    if (FindIndex !== -1) {
-      const newArrayProducts = products.filter((product) => product.id !== id);
-      await writeFile(this.path, newArrayProducts);
-      console.log('Producto eliminado correctamente');
-    } else {
-      console.log('No se encontró Producto');
-    }
+    ProductsModel.deleteOne({_id:id})
   };
 }
 const Product = new ProductManager('./assets/product.json');
