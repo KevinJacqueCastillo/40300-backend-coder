@@ -4,7 +4,20 @@ const { hashPassword, comparePassword } = require('../utils/bcrypt');
 const passport = require('passport');
 const { STRATEGY_REGISTER } = require('../utils/constants');
 const { generateToken } = require('../utils/jwt');
+const passportCustom = require('../utils/passportCall');
 const router = Router();
+
+const authorization = (role) => {
+  //damos autorizacion solo a los que sean el role
+  return (req, res, next) => {
+    if (!req.user)
+      return res.status(401).send({ status: 'error', msg: 'no contiene user' });
+    if (req.user.role != role)
+      return res.status(403).send({ status: 'error', msg: 'no autorizado' });
+
+    next();
+  };
+};
 
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
@@ -12,23 +25,14 @@ router.post('/login', async (req, res) => {
   const user = await UsersModel.findOne({ email });
   const isValidPassword = await comparePassword(password, user.password);
   if (user && isValidPassword) {
-    const token = generateToken({ id: user.id });
+    const token = generateToken({ id: user.id, role: 'user' });
     res
-      .cookie('cookie-token', token, { maxAge: 60 * 60 * 100 })
-      .send({ user, token });
+      .cookie('token-coder', token, { maxAge: 30000, httpOnly: true })
+      .send({ user });
   } else {
     res.status(401).send('Email o contraseña incorrectos');
   }
 });
-
-router.get(
-  '/current',
-  passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    console.log(req);
-    res.send({ payload: req.user });
-  }
-);
 
 router.post(
   '/register',
@@ -54,5 +58,14 @@ router.post('/forgot-password', async (req, res) => {
     res.status(500).send('Error al crear usuario');
   }
 });
+
+router.get(
+  '/current',
+  passportCustom('jwt'),
+  authorization('user'),
+  (req, res) => {
+    res.send(req.user);
+  }
+);
 
 module.exports = router;

@@ -16,9 +16,7 @@ formLogin.addEventListener('submit', (e) => {
   })
     .then((res) => res.json())
     .then((data) => {
-      console.log(data);
       window.alert(`Bievenido ${data.user.first_name}`);
-      // window.location.href = '/perfil';
     })
     .catch((err) => {
       window.alert('Error al iniciar sesion');

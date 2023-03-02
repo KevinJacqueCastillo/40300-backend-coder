@@ -5,7 +5,7 @@ const routerViews = require('./routes/views.router');
 const routerSession = require('./routes/session.router');
 const InitPassport = require('./utils/passport.config');
 const passport = require('passport');
-const cookieParser = require('cookie-parser');
+const cookie = require('cookie-parser');
 
 //innit
 const app = express();
@@ -13,11 +13,11 @@ app.engine('handlebars', handlebars.engine());
 app.set('view engine', 'handlebars');
 app.set('views', __dirname + '/views');
 
+app.use(cookie());
 InitPassport();
-app.use(cookieParser());
 app.use(passport.initialize());
-app.use(express.json());
 app.use(express.static(__dirname + '/public'));
+app.use(express.json());
 
 //routes
 app.use(routerViews);
